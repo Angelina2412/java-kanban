@@ -12,7 +12,7 @@ public class Main {
         taskManager.createTask("Walk with dog", "Evening", Status.IN_PROGRESS);
         List<Subtask> subtasks = new ArrayList<>();
         subtasks.add(taskManager.createSubtask("Reading", "Book", Status.DONE));
-        subtasks.add(taskManager.createSubtask("Swimming", "ZIL", Status.DONE));
+        subtasks.add(taskManager.createSubtask("Swimming", "ZIL", Status.IN_PROGRESS));
         Epic epicFirst = taskManager.createEpic("Weekend", "A lot of tasks", Status.NEW, subtasks);
         taskManager.createEpic("Week", "Work", Status.NEW);
         taskManager.createSubtask("Shopping", "Afimoll", Status.IN_PROGRESS);
@@ -20,8 +20,16 @@ public class Main {
         taskManager.getAllSubtasks();
         Epic epicSecond = taskManager.createEpic("Sunday", "day off", Status.IN_PROGRESS);
         taskManager.getAllEpic();
-        Subtask newSubtask = taskManager.createSubtask("Cooking", "Dinner", Status.NEW);
-        taskManager.updateSubtask(newSubtask, 2);
+        taskManager.getAllEpic();
+        taskManager.updateSubtask(taskManager.createSubtask("Cooking", "Dinner", Status.DONE, 4));
+        taskManager.getAllEpic();
+        taskManager.getAllSubtasks();
+        taskManager.getAllSubtasks();
+        taskManager.getAllEpic();
+        taskManager.deleteSubtaskById(4);
+        taskManager.getAllEpic();
+        Subtask newSubtask = taskManager.createSubtask("Cooking", "Dinner", Status.NEW,3);
+        taskManager.updateSubtask(newSubtask);
         taskManager.getAllSubtasks();
         System.out.println("Выберите новый статус для задачи: 1 - NEW, 2 - IN_PROGRESS, 3 - DONE");
         int numberForNewStatus = scanner.nextInt();
@@ -29,10 +37,9 @@ public class Main {
         taskManager.getSubtaskById(2);
         taskManager.deleteTaskById(1);
         taskManager.getAllTasks();
-        taskManager.updateTask(taskManager.createTask("Walk with dogs", "Morning", Status.IN_PROGRESS), 2);
+        taskManager.updateTask(taskManager.createTask("Walk with dogs", "Morning", Status.IN_PROGRESS,2));
         taskManager.getAllTasks();
         taskManager.getSubtasksForEpic(epicFirst);
-        taskManager.removeAllSubtasks();
-        taskManager.getAllSubtasks();
+        taskManager.deleteEpicById(5);
     }
 }
