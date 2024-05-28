@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Поехали!");
         Task taskFirst = taskManager.createTask("Meeting with friend", "Sasha", Status.NEW);
@@ -17,29 +17,9 @@ public class Main {
         taskManager.createEpic("Week", "Work", Status.NEW);
         taskManager.createSubtask("Shopping", "Afimoll", Status.IN_PROGRESS);
         taskManager.createSubtask("Cooking", "Dinner", Status.IN_PROGRESS);
-        taskManager.getAllSubtasks();
-        Epic epicSecond = taskManager.createEpic("Sunday", "day off", Status.IN_PROGRESS);
-        taskManager.getAllEpic();
-        taskManager.getAllEpic();
-        taskManager.updateSubtask(taskManager.createSubtask("Cooking", "Dinner", Status.DONE, 4));
-        taskManager.getAllEpic();
-        taskManager.getAllSubtasks();
-        taskManager.getAllSubtasks();
-        taskManager.getAllEpic();
-        taskManager.deleteSubtaskById(4);
-        taskManager.getAllEpic();
-        Subtask newSubtask = taskManager.createSubtask("Cooking", "Dinner", Status.NEW,3);
-        taskManager.updateSubtask(newSubtask);
-        taskManager.getAllSubtasks();
-        System.out.println("Выберите новый статус для задачи: 1 - NEW, 2 - IN_PROGRESS, 3 - DONE");
-        int numberForNewStatus = scanner.nextInt();
-        taskManager.changeTaskStatus(newSubtask, numberForNewStatus);
-        taskManager.getSubtaskById(2);
-        taskManager.deleteTaskById(1);
-        taskManager.getAllTasks();
-        taskManager.updateTask(taskManager.createTask("Walk with dogs", "Morning", Status.IN_PROGRESS,2));
-        taskManager.getAllTasks();
-        taskManager.getSubtasksForEpic(epicFirst);
-        taskManager.deleteEpicById(5);
+        taskManager.getTaskById(1);
+        taskManager.getSubtaskById(3);
+        taskManager.getEpicById(5);
+        taskManager.inMemoryHistoryManager.getHistory();
     }
 }
