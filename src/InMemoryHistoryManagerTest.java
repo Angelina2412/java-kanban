@@ -48,8 +48,6 @@ public class InMemoryHistoryManagerTest {
         inMemoryHistoryManager.addTask(inMemoryTaskManager.getTaskById(5));
         List<Task> viewedTasks = inMemoryHistoryManager.getHistory();
         assertEquals(10, viewedTasks.size());
-        //тут у меня тест падает, но я не могу понять, почему у меня продолжает расти список viewedTasks, ведь я делаю првоерку
-        //в классе InMemoryTaskManager в тесте getTaskById, getSubtaskById,  getEpicById
     }
 
 }

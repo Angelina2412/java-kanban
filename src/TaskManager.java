@@ -63,7 +63,11 @@ public interface TaskManager {
 
     void changeTaskStatus(Task task, int newStatus);
 
-    void changeEpicStatus(Epic epic);
+    private void changeEpicStatus(Epic epic) {
+        updateEpicStatus(epic);
+    };
 
     void updateEpicStatus(Epic epic);
+
+    abstract List<Task> getHistory();
 }
