@@ -29,7 +29,7 @@ public interface TaskManager {
 
     Epic createEpic(String name, String description, Status status, int taskId, List<Subtask> subtasks);
 
-    void getAllTasks();
+    List<Task> getAllTasks();
 
     void getAllSubtasks();
 
@@ -69,5 +69,5 @@ public interface TaskManager {
 
     void updateEpicStatus(Epic epic);
 
-    abstract List<Task> getHistory();
+    List<Task> getHistory();
 }

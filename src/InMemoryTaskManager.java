@@ -10,7 +10,7 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Epic> epicsMap;
     private int taskIdCounter;
 
-    HistoryManager historyManager;
+    private HistoryManager historyManager;
 
     public InMemoryTaskManager() {
         tasksMap = new HashMap<>();
@@ -118,14 +118,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void getAllTasks() {
-        for (Task task : tasksMap.values()) {
-            System.out.println("Task ID: " + task.getTaskId());
-            System.out.println("Task Name: " + task.getTaskName());
-            System.out.println("Task Description: " + task.getDescription());
-            System.out.println("Task Status: " + task.getStatus());
-            System.out.println();
-        }
+    public List<Task> getAllTasks() {
+        List<Task> allTasks = new ArrayList<>(tasksMap.values());
+        return allTasks;
     }
 
     @Override

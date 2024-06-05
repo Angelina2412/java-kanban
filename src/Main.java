@@ -20,6 +20,5 @@ public class Main {
         taskManager.getTaskById(1);
         taskManager.getSubtaskById(3);
         taskManager.getEpicById(5);
-        taskManager.historyManager.getHistory();
     }
 }
