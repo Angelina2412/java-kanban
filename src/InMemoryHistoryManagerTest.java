@@ -48,7 +48,7 @@ public class InMemoryHistoryManagerTest {
         inMemoryHistoryManager.addTask(inMemoryTaskManager.getTaskById(6));
         inMemoryHistoryManager.addTask(inMemoryTaskManager.getTaskById(5));
         List<Task> viewedTasks = inMemoryHistoryManager.getHistory();
-        assertEquals(10, viewedTasks.size());
+        assertEquals(6, viewedTasks.size());
     }
 
     @Test
@@ -86,9 +86,9 @@ public class InMemoryHistoryManagerTest {
     @Test
     void checkLinkedListIntegrity() {
         Node current = inMemoryHistoryManager.getHead();
-        while (current != null && current.next != null) {
-            assertEquals(current, current.next.prev);
-            current = current.next;
+        while (current != null && current.getNext() != null) {
+            assertEquals(current, current.getNext().getPrev());
+            current = current.getNext();
         }
     }
 }
