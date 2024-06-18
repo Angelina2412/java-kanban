@@ -65,7 +65,9 @@ public interface TaskManager {
 
     private void changeEpicStatus(Epic epic) {
         updateEpicStatus(epic);
-    };
+    }
+
+    ;
 
     void updateEpicStatus(Epic epic);
 
