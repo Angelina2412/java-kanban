@@ -16,7 +16,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void checkCorrectInformationAboutTask(){
+    void checkCorrectInformationAboutTask() {
         Task task = inMemoryTaskManager.getTaskById(1);
         assertEquals("Прогулка", task.getTaskName());
         assertEquals("С собакой", task.getDescription());
@@ -24,7 +24,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void checkCorrectInformationAboutSubtask(){
+    void checkCorrectInformationAboutSubtask() {
         Subtask subtask = inMemoryTaskManager.getSubtaskById(2);
         assertEquals("Заказать еду", subtask.getTaskName());
         assertEquals("Perekrestok", subtask.getDescription());
@@ -32,7 +32,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void checkCorrectInformationAboutEpic(){
+    void checkCorrectInformationAboutEpic() {
         Epic epic = inMemoryTaskManager.getEpicById(3);
         assertEquals("План на понедельник", epic.getTaskName());
         assertEquals("Успеть до обеда", epic.getDescription());
@@ -40,25 +40,25 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void checkCorrectDeleteTask(){
+    void checkCorrectDeleteTask() {
         inMemoryTaskManager.deleteTaskById(1);
         assertNull(inMemoryTaskManager.getTaskById(1));
     }
 
     @Test
-    void checkCorrectDeleteSubtask(){
+    void checkCorrectDeleteSubtask() {
         inMemoryTaskManager.deleteSubtaskById(2);
         assertNull(inMemoryTaskManager.getSubtaskById(2));
     }
 
     @Test
-    void checkCorrectDeleteEpic(){
+    void checkCorrectDeleteEpic() {
         inMemoryTaskManager.deleteEpicById(3);
         assertNull(inMemoryTaskManager.getEpicById(3));
     }
 
     @Test
-    void checkCorrectUpdateTask(){
+    void checkCorrectUpdateTask() {
         Task newTask = inMemoryTaskManager.createTask("Почитать",  "Книгу", Status.IN_PROGRESS, 1);
         inMemoryTaskManager.updateTask(newTask);
         Task task = inMemoryTaskManager.getTaskById(1);
@@ -68,7 +68,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void checkCorrectUpdateSubtask(){
+    void checkCorrectUpdateSubtask() {
         Subtask newSubtask = inMemoryTaskManager.createSubtask("Заказать еду на ужин",  "Perekrestok or Samokat", Status.NEW, 2);
         inMemoryTaskManager.updateSubtask(newSubtask);
         Subtask subtask = inMemoryTaskManager.getSubtaskById(2);
@@ -78,7 +78,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void checkCorrectUpdateEpic(){
+    void checkCorrectUpdateEpic() {
         Epic newEpic = inMemoryTaskManager.createEpic("План на вторник",  "Успеть до вечера", Status.IN_PROGRESS, 3);
         inMemoryTaskManager.updateEpic(newEpic);
         Epic epic = inMemoryTaskManager.getEpicById(3);
@@ -86,5 +86,4 @@ public class InMemoryTaskManagerTest {
         assertEquals("Успеть до вечера", epic.getDescription());
         assertEquals(Status.IN_PROGRESS, epic.getStatus());
     }
-
 }
