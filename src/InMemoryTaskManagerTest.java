@@ -9,7 +9,7 @@ public class InMemoryTaskManagerTest {
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
     @BeforeEach
-    void createTask(){
+    void createTask() {
         inMemoryTaskManager.createTask("Прогулка", "С собакой", Status.NEW);
         inMemoryTaskManager.createSubtask("Заказать еду",  "Perekrestok", Status.IN_PROGRESS);
         inMemoryTaskManager.createEpic("План на понедельник",  "Успеть до обеда", Status.NEW);
