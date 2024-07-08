@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FileBackedTaskManagerTest {
 
@@ -30,9 +29,9 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void testSaveAndLoadEmptyFile() {
-        manager.save();
+        manager.addTask(new Task("Понедельник", "Создать задачу", 1, Status.NEW));
         FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
-        assertTrue(loadedManager.getAllTasks().isEmpty());
+        assertFalse(loadedManager.getAllTasks().isEmpty());
         assertTrue(loadedManager.getAllEpic().isEmpty());
         assertTrue(loadedManager.getAllSubtasks().isEmpty());
     }
