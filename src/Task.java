@@ -45,6 +45,10 @@ public class Task {
         this.status = status;
     }
 
+    public String getType() {
+        return "TASK";
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

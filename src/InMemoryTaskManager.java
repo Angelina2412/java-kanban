@@ -6,8 +6,8 @@ import java.util.Map;
 public class InMemoryTaskManager implements TaskManager {
 
     private Map<Integer, Task> tasksMap;
-    private Map<Integer, Subtask> subtasksMap;
     private Map<Integer, Epic> epicsMap;
+    private Map<Integer, Subtask> subtasksMap;
     private int taskIdCounter;
 
     private HistoryManager historyManager;
@@ -124,25 +124,31 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void getAllSubtasks() {
+    public List<Task> getAllSubtasks() {
+        List<Task> subTasks = new ArrayList<>();
         for (Subtask subtask : subtasksMap.values()) {
             System.out.println("Task ID: " + subtask.getTaskId());
             System.out.println("Task Name: " + subtask.getTaskName());
             System.out.println("Task Description: " + subtask.getDescription());
             System.out.println("Task Status: " + subtask.getStatus());
             System.out.println();
+            subTasks.add(subtask);
         }
+        return subTasks;
     }
 
     @Override
-    public void getAllEpic() {
+    public List<Task> getAllEpic() {
+        List<Task> epicTasks = new ArrayList<>();
         for (Epic epic : epicsMap.values()) {
             System.out.println("Task ID: " + epic.getTaskId());
             System.out.println("Task Name: " + epic.getTaskName());
             System.out.println("Task Description: " + epic.getDescription());
             System.out.println("Task Status: " + epic.getStatus());
             System.out.println();
+            epicTasks.add(epic);
         }
+        return epicTasks;
     }
 
     @Override

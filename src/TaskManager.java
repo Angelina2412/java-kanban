@@ -31,9 +31,9 @@ public interface TaskManager {
 
     List<Task> getAllTasks();
 
-    void getAllSubtasks();
+    List<Task> getAllSubtasks();
 
-    void getAllEpic();
+    List<Task> getAllEpic();
 
     Task getTaskById(int taskId);
 
