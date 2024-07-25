@@ -384,37 +384,39 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return null;
     }
-private boolean isOverlapping(Task newTask) {
-    LocalDateTime newStart = newTask.getStartTime();
-    LocalDateTime newEnd = newTask.getEndTime();
 
-    if (newStart == null || newEnd == null) {
-        return false;
+    private boolean isOverlapping(Task newTask) {
+        LocalDateTime newStart = newTask.getStartTime();
+        LocalDateTime newEnd = newTask.getEndTime();
+
+        if (newStart == null || newEnd == null) {
+            return false;
+        }
+
+        boolean overlapping = tasksMap.values().stream().anyMatch(existingTask -> {
+            LocalDateTime existingStart = existingTask.getStartTime();
+            LocalDateTime existingEnd = existingTask.getEndTime();
+            return existingStart != null && existingEnd != null &&
+                    (newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart));
+        });
+
+        overlapping = overlapping || subtasksMap.values().stream().anyMatch(existingSubtask -> {
+            LocalDateTime existingStart = existingSubtask.getStartTime();
+            LocalDateTime existingEnd = existingSubtask.getEndTime();
+            return existingStart != null && existingEnd != null &&
+                    (newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart));
+        });
+
+        overlapping = overlapping || epicsMap.values().stream().anyMatch(existingEpic -> {
+            LocalDateTime existingStart = existingEpic.getStartTime();
+            LocalDateTime existingEnd = existingEpic.getEndTime();
+            return existingStart != null && existingEnd != null &&
+                    (newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart));
+        });
+
+        return overlapping;
     }
 
-    boolean overlapping = tasksMap.values().stream().anyMatch(existingTask -> {
-        LocalDateTime existingStart = existingTask.getStartTime();
-        LocalDateTime existingEnd = existingTask.getEndTime();
-        return existingStart != null && existingEnd != null &&
-                (newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart));
-    });
-
-    overlapping = overlapping || subtasksMap.values().stream().anyMatch(existingSubtask -> {
-        LocalDateTime existingStart = existingSubtask.getStartTime();
-        LocalDateTime existingEnd = existingSubtask.getEndTime();
-        return existingStart != null && existingEnd != null &&
-                (newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart));
-    });
-
-    overlapping = overlapping || epicsMap.values().stream().anyMatch(existingEpic -> {
-        LocalDateTime existingStart = existingEpic.getStartTime();
-        LocalDateTime existingEnd = existingEpic.getEndTime();
-        return existingStart != null && existingEnd != null &&
-                (newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart));
-    });
-
-    return overlapping;
-}
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
