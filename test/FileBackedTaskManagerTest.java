@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,7 +31,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void testSaveAndLoadEmptyFile() {
-        manager.addTask(new Task("Понедельник", "Создать задачу", 1, Status.NEW));
+        manager.addTask(new Task("Понедельник", "Создать задачу", 1, Status.NEW, Duration.ofHours(3), LocalDateTime.now().plusHours(2)));
         FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
         assertFalse(loadedManager.getAllTasks().isEmpty());
         assertTrue(loadedManager.getAllEpic().isEmpty());
@@ -38,10 +40,10 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void testSaveAndLoadMultipleTasks() {
-        Task task1 = new Task("Task 1", "Обед", 1, Status.NEW);
-        Task task2 = new Task("Task 2", "Ужин", 2, Status.IN_PROGRESS);
-        Epic epic1 = new Epic("Epic 1", "Завтрак", 3, Status.NEW, List.of());
-        Subtask subtask1 = new Subtask("Subtask 1", "Перекус", 4, Status.DONE);
+        Task task1 = new Task("Task 1", "Обед", 1, Status.NEW, Duration.ofHours(3), LocalDateTime.now().plusHours(2));
+        Task task2 = new Task("Task 2", "Ужин", 2, Status.IN_PROGRESS, Duration.ofHours(3), LocalDateTime.now().plusHours(2));
+        Epic epic1 = new Epic("Epic 1", "Завтрак", 3, Status.NEW, List.of(), Duration.ofHours(3), LocalDateTime.now().plusHours(2));
+        Subtask subtask1 = new Subtask("Subtask 1", "Перекус", 4, Status.DONE, Duration.ofHours(3), LocalDateTime.now().plusHours(2));
 
         manager.addTask(task1);
         manager.addTask(task2);
@@ -77,10 +79,10 @@ public class FileBackedTaskManagerTest {
         assertEquals(1, loadedManager.getAllEpic().size());
         assertEquals(1, loadedManager.getAllSubtasks().size());
 
-        Task task1 = new Task("Task 1", "Завтрак", 1, Status.NEW);
-        Task task2 = new Task("Task 2", "Обед", 2, Status.IN_PROGRESS);
-        Epic epic1 = new Epic("Epic 1", "Ужин", 3, Status.NEW, List.of());
-        Subtask subtask1 = new Subtask("Subtask 1", "Салатик", 4, Status.DONE);
+        Task task1 = new Task("Task 1", "Завтрак", 1, Status.NEW, Duration.ofHours(3), LocalDateTime.now().plusHours(2));
+        Task task2 = new Task("Task 2", "Обед", 2, Status.IN_PROGRESS, Duration.ofHours(3), LocalDateTime.now().plusHours(2));
+        Epic epic1 = new Epic("Epic 1", "Ужин", 3, Status.NEW, List.of(), Duration.ofHours(3), LocalDateTime.now().plusHours(2));
+        Subtask subtask1 = new Subtask("Subtask 1", "Салатик", 4, Status.DONE, Duration.ofHours(3), LocalDateTime.now().plusHours(2));
 
         assertEquals(task1, loadedManager.getTaskById(1));
         assertEquals(task2, loadedManager.getTaskById(2));

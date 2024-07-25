@@ -1,3 +1,5 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TaskManager {
@@ -13,21 +15,22 @@ public interface TaskManager {
 
     void addEpic(Epic epic, int taskId);
 
-    Task createTask(String name, String description, Status status);
+    Task createTask(String name, String description, Status status, Duration duration, LocalDateTime startTime);
 
-    Subtask createSubtask(String name, String description, Status status);
+    Subtask createSubtask(String name, String description, Status status, Duration duration, LocalDateTime startTime);
 
-    Epic createEpic(String name, String description, Status status);
+    Epic createEpic(String name, String description, Status status, Duration duration, LocalDateTime startTime);
 
-    Epic createEpic(String name, String description, Status status, List<Subtask> subtasks);
+    Epic createEpic(String name, String description, int taskId, Status status, Duration duration, LocalDateTime startTime);
 
-    Task createTask(String name, String description, Status status, int taskId);
+    Epic createEpic(String name, String description, int taskId, Status status, List<Subtask> subtasks, Duration duration, LocalDateTime startTime);
 
-    Subtask createSubtask(String name, String description, Status status, int taskId);
+    Epic createEpic(String name, String description, Status status, List<Subtask> subtasks, Duration duration, LocalDateTime startTime);
 
-    Epic createEpic(String name, String description, Status status, int taskId);
 
-    Epic createEpic(String name, String description, Status status, int taskId, List<Subtask> subtasks);
+    Task createTask(String name, String description, Status status, int taskId, Duration duration, LocalDateTime startTime);
+
+    Subtask createSubtask(String name, String description, Status status, int taskId, Duration duration, LocalDateTime startTime);
 
     List<Task> getAllTasks();
 
@@ -72,4 +75,8 @@ public interface TaskManager {
     void updateEpicStatus(Epic epic);
 
     List<Task> getHistory();
+
+    List<Task> getPrioritizedTasks();
+
+    void clear();
 }

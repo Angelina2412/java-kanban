@@ -2,6 +2,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,14 +73,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = fields[2];
         Status status = Status.valueOf(fields[3]);
         String description = fields[4];
+        Duration duration = Duration.ofMinutes(Long.parseLong(fields[5]));
+        LocalDateTime startTime = LocalDateTime.parse(fields[6], Task.DATE_TIME_FORMATTER);
 
         switch (type) {
             case TASK:
-                return new Task(name, description, id, status);
+                return new Task(name, description, id, status, duration, startTime);
             case EPIC:
-                return new Epic(name, description, id, status, new ArrayList<>());
+                return new Epic(name, description, id, status, new ArrayList<>(), duration, startTime);
             case SUBTASK:
-                return new Subtask(name, description, id, status);
+                return new Subtask(name, description, id, status, duration, startTime);
             default:
                 throw new IllegalArgumentException("Неизвестный тип задачи " + type);
         }
@@ -147,57 +151,57 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Task createTask(String name, String description, Status status) {
-        Task newTask = super.createTask(name, description, status);
+    public Task createTask(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
+        Task newTask = super.createTask(name, description, status, duration, startTime);
         save();
         return newTask;
     }
 
     @Override
-    public Subtask createSubtask(String name, String description, Status status) {
-        Subtask newSubtask = super.createSubtask(name, description, status);
+    public Subtask createSubtask(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
+        Subtask newSubtask = super.createSubtask(name, description, status, duration, startTime);
         save();
         return newSubtask;
     }
 
     @Override
-    public Epic createEpic(String name, String description, Status status) {
-        Epic newEpic = super.createEpic(name, description, status);
-        save();
-        return newEpic;
-    }
-
-    @Override
-    public Epic createEpic(String name, String description, Status status, List<Subtask> subtasks) {
-        Epic newEpic = super.createEpic(name, description, status, subtasks);
-        save();
-        return newEpic;
-    }
-
-    @Override
-    public Task createTask(String name, String description, Status status, int taskId) {
-        Task newTask = super.createTask(name, description, status, taskId);
+    public Task createTask(String name, String description, Status status, int taskId, Duration duration, LocalDateTime startTime) {
+        Task newTask = super.createTask(name, description, status, taskId, duration, startTime);
         save();
         return newTask;
     }
 
     @Override
-    public Subtask createSubtask(String name, String description, Status status, int taskId) {
-        Subtask newSubtask = super.createSubtask(name, description, status, taskId);
+    public Subtask createSubtask(String name, String description, Status status, int taskId, Duration duration, LocalDateTime startTime) {
+        Subtask newSubtask = super.createSubtask(name, description, status, taskId, duration, startTime);
         save();
         return newSubtask;
     }
 
     @Override
-    public Epic createEpic(String name, String description, Status status, int taskId) {
-        Epic newEpic = super.createEpic(name, description, status, taskId);
+    public Epic createEpic(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
+        Epic newEpic = super.createEpic(name, description, status, duration, startTime);
         save();
         return newEpic;
     }
 
     @Override
-    public Epic createEpic(String name, String description, Status status, int taskId, List<Subtask> subtasks) {
-        Epic newEpic = super.createEpic(name, description, status, taskId, subtasks);
+    public Epic createEpic(String name, String description, int taskId, Status status, Duration duration, LocalDateTime startTime) {
+        Epic newEpic = super.createEpic(name, description, taskId, status, duration, startTime);
+        save();
+        return newEpic;
+    }
+
+    @Override
+    public Epic createEpic(String name, String description, int taskId, Status status, List<Subtask> subtasks, Duration duration, LocalDateTime startTime) {
+        Epic newEpic = super.createEpic(name, description, taskId, status, subtasks, duration, startTime);
+        save();
+        return newEpic;
+    }
+
+    @Override
+    public Epic createEpic(String name, String description, Status status, List<Subtask> subtasks, Duration duration, LocalDateTime startTime) {
+        Epic newEpic = super.createEpic(name, description, status, subtasks, duration, startTime);
         save();
         return newEpic;
     }
