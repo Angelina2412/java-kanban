@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private final File file;
 
     public FileBackedTaskManager(File file) {
@@ -56,25 +58,40 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 epicId = "0";
             }
         }
-        return String.format("%d,%s,%s,%s,%s,%s",
+
+        String formattedDate;
+        if (task.getStartTime() != null) {
+            formattedDate = task.getStartTime().format(DATE_TIME_FORMATTER);
+        } else {
+            formattedDate = "null";
+        }
+        return String.format("%d,%s,%s,%s,%s,%d,%s",
                 task.getTaskId(),
-                type,
+                task.getType(),
                 task.getTaskName(),
                 task.getStatus(),
                 task.getDescription(),
-                epicId);
+                task.getDuration().toMinutes(),
+                formattedDate);
 
     }
 
     private static Task fromString(String value) {
         String[] fields = value.split(",");
+        if (fields.length < 7) {
+            throw new IllegalArgumentException("Недостаточно данных в строке: " + value);
+        }
+
         int id = Integer.parseInt(fields[0]);
         TaskType type = TaskType.valueOf(fields[1]);
         String name = fields[2];
         Status status = Status.valueOf(fields[3]);
         String description = fields[4];
         Duration duration = Duration.ofMinutes(Long.parseLong(fields[5]));
-        LocalDateTime startTime = LocalDateTime.parse(fields[6], Task.DATE_TIME_FORMATTER);
+        LocalDateTime startTime = null;
+        if (!"null".equals(fields[6])) {
+            startTime = LocalDateTime.parse(fields[6], DATE_TIME_FORMATTER);
+        }
 
         switch (type) {
             case TASK:
@@ -88,9 +105,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    private void save() {
+    public void save() {
         try (BufferedWriter writer = Files.newBufferedWriter(file.toPath())) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write("id,type,name,status,description,duration,startTime,epic\n");
 
             for (Task task : getAllTasks()) {
                 writer.write(toString(task) + "\n");
