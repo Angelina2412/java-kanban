@@ -63,39 +63,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addTask(Task task, int taskId) {
-        if (isOverlapping(task)) {
-            System.out.println("В это время уже назначна другая задача");
-            return;
-        }
-        task.setTaskId(taskId);
-        tasksMap.put(taskId, task);
-        prioritizedTasks.add(task);
-    }
-
-    @Override
-    public void addSubtask(Subtask subtask, int taskId) {
-        if (isOverlapping(subtask)) {
-            System.out.println("В это время уже назначна другая подзадача");
-            return;
-        }
-        prioritizedTasks.add(subtask);
-        subtask.setTaskId(taskId);
-        subtasksMap.put(taskId, subtask);
-    }
-
-    @Override
-    public void addEpic(Epic epic, int taskId) {
-        if (isOverlapping(epic)) {
-            System.out.println("В это время уже назначна другая задача");
-            return;
-        }
-        prioritizedTasks.add(epic);
-        epic.setTaskId(taskId);
-        epicsMap.put(taskId, epic);
-    }
-
-    @Override
     public Task createTask(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
         Task newTask = new Task(name, description, taskIdCounter, status, duration, startTime);
         addTask(newTask);
@@ -110,24 +77,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic createEpic(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
-        Epic newEpic = new Epic(name, description, taskIdCounter, status, duration, startTime);
+    public Epic createEpic(String name, String description, Status status) {
+        Epic newEpic = new Epic(name, description, taskIdCounter, status);
         addEpic(newEpic);
-        return newEpic;
-    }
-
-    @Override
-    public Epic createEpic(String name, String description, int taskId, Status status, Duration duration, LocalDateTime startTime) {
-        Epic newEpic = new Epic(name, description, taskId, status, duration, startTime);
-        addEpic(newEpic, taskId);
-        return newEpic;
-    }
-
-    @Override
-    public Epic createEpic(String name, String description, int taskId, Status status, List<Subtask> subtasks, Duration duration, LocalDateTime startTime) {
-        Epic newEpic = new Epic(name, description, taskId, status, subtasks, duration, startTime);
-        addEpic(newEpic);
-        updateEpicStatus(newEpic);
         return newEpic;
     }
 
@@ -137,20 +89,6 @@ public class InMemoryTaskManager implements TaskManager {
         addEpic(newEpic);
         updateEpicStatus(newEpic);
         return newEpic;
-    }
-
-    @Override
-    public Task createTask(String name, String description, Status status, int taskId, Duration duration, LocalDateTime startTime) {
-        Task newTask = new Task(name, description, taskId, status, duration, startTime);
-        addTask(newTask, taskId);
-        return newTask;
-    }
-
-    @Override
-    public Subtask createSubtask(String name, String description, Status status, int taskId, Duration duration, LocalDateTime startTime) {
-        Subtask newSubtask = new Subtask(name, description, taskId, status, duration, startTime);
-        addSubtask(newSubtask, taskId);
-        return newSubtask;
     }
 
     @Override
@@ -231,9 +169,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) {
-        int taskId = task.getTaskId();
+    public void updateTask(Task task, int taskId) {
         if (tasksMap.containsKey(taskId)) {
+            task.setTaskId(taskId);
             tasksMap.put(taskId, task);
             System.out.println("Задача с ID " + taskId + " была обновлена");
         } else {
@@ -242,30 +180,30 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(Epic epic) {
-        int epicId = epic.getTaskId();
-        if (epicsMap.containsKey(epicId)) {
-            epicsMap.put(epicId, epic);
-            System.out.println("Эпик с  ID " + epicId + " был обновлен");
+    public void updateEpic(Epic epic, int taskId) {
+        if (epicsMap.containsKey(taskId)) {
+            epic.setTaskId(taskId);
+            epicsMap.put(taskId, epic);
+            System.out.println("Эпик с  ID " + taskId + " был обновлен");
         } else {
-            System.out.println("Эпик с ID " + epicId + " не найден");
+            System.out.println("Эпик с ID " + taskId + " не найден");
         }
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
-        int subtaskId = subtask.getTaskId();
-        if (subtasksMap.containsKey(subtaskId)) {
-            subtasksMap.put(subtaskId, subtask);
-            System.out.println("Сабтаска с ID " + subtaskId + " была обновлена");
+    public void updateSubtask(Subtask subtask, int taskId) {
+        if (subtasksMap.containsKey(taskId)) {
+            subtask.setTaskId(taskId);
+            subtasksMap.put(taskId, subtask);
+            System.out.println("Сабтаска с ID " + taskId + " была обновлена");
             Epic epic = getEpicBySubtaskId(subtask);
             if (epic != null) {
-                epic.getSubtasks().remove(subtask);
+                epic.getSubtasks().removeIf(existingSubtask -> existingSubtask.getTaskId() == taskId);
                 epic.getSubtasks().add(subtask);
                 updateEpicStatus(epic);
             }
         } else {
-            System.out.println("Сабтаска с ID " + subtaskId + " не найдена");
+            System.out.println("Сабтаска с ID " + taskId + " не найдена");
         }
     }
 
@@ -303,7 +241,6 @@ public class InMemoryTaskManager implements TaskManager {
         subtasksMap.clear();
         System.out.println("Все сабтаски удалены");
     }
-
 
     @Override
     public List<Subtask> getSubtasksForEpic(Epic epic) {

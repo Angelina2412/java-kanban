@@ -16,9 +16,9 @@ public class InMemoryTaskManagerTest {
     void createTask() {
         inMemoryTaskManager.clear();
         inMemoryTaskManager.createTask("Прогулка", "С собакой", Status.NEW, Duration.ofHours(1), LocalDateTime.now().plusHours(0));
-        inMemoryTaskManager.createTask("Прогулка", "С подругой", Status.IN_PROGRESS, 11, Duration.ofHours(3), LocalDateTime.now().plusHours(2));
+        inMemoryTaskManager.createTask("Прогулка", "С подругой", Status.IN_PROGRESS, Duration.ofHours(3), LocalDateTime.now().plusHours(2));
         inMemoryTaskManager.createSubtask("Заказать еду", "Perekrestok", Status.IN_PROGRESS, Duration.ofHours(1), LocalDateTime.now().plusHours(6));
-        inMemoryTaskManager.createSubtask("Заказать воду", "VV", Status.IN_PROGRESS, 12, Duration.ofHours(1), LocalDateTime.now().plusHours(8));
+        inMemoryTaskManager.createSubtask("Заказать воду", "VV", Status.IN_PROGRESS, Duration.ofHours(1), LocalDateTime.now().plusHours(8));
 
         List<Subtask> subtasks1 = new ArrayList<>();
         subtasks1.add(new Subtask("Подзадача 1", "Описание для подзадачи 1", 13, Status.NEW, Duration.ofHours(1), LocalDateTime.now().plusHours(10)));
@@ -29,7 +29,7 @@ public class InMemoryTaskManagerTest {
         subtasks2.add(new Subtask("Подзадача 4", "Описание для подзадачи 4", 16, Status.NEW, Duration.ofHours(2), LocalDateTime.now().plusHours(12)));
 
         inMemoryTaskManager.createEpic("Эпик", "Описание для эпика", Status.NEW, subtasks1, Duration.ZERO, null);
-        inMemoryTaskManager.createEpic("Ещё один эпик", "Описание для еще одного эпика", 18, Status.NEW, subtasks2, Duration.ZERO, null);
+        inMemoryTaskManager.createEpic("Ещё один эпик", "Описание для еще одного эпика", Status.NEW, subtasks2, Duration.ZERO, null);
 
     }
 
@@ -50,16 +50,16 @@ public class InMemoryTaskManagerTest {
 
     @Test
     void checkEpicTimeWithSubtasks() {
-        Epic epic = inMemoryTaskManager.getEpicById(3);
+        Epic epic = inMemoryTaskManager.getEpicById(5);
         assertNotNull(epic.getStartTime());
         assertEquals(Duration.ofHours(3), epic.getDuration());
     }
 
     @Test
-    void checkEpicWithSameTimeNotCreate() {
-        Epic newEpic = inMemoryTaskManager.createEpic("План на вторник", "Успеть до вечера", Status.NEW, Duration.ofHours(3), LocalDateTime.now().plusHours(10));
+    void checkEpicWithoutSubtasksCreate() {
+        inMemoryTaskManager.createEpic("План на вторник", "Успеть до вечера", Status.NEW);
         List<Task> allEpics = inMemoryTaskManager.getAllEpic();
-        assertEquals(1, allEpics.size());
+        assertEquals(2, allEpics.size());
     }
 
     @Test
@@ -75,14 +75,14 @@ public class InMemoryTaskManagerTest {
     void checkSubtaskWithSameTimeNotCreate() {
         List<Task> allSubtasksInTheStart = inMemoryTaskManager.getAllSubtasks();
         assertEquals(2, allSubtasksInTheStart.size());
-        inMemoryTaskManager.createSubtask("Подзадача 3", "Описание для подзадачи 3", Status.NEW, 15, Duration.ofHours(1), LocalDateTime.now().plusHours(10));
+        inMemoryTaskManager.createSubtask("Подзадача 3", "Описание для подзадачи 3", Status.NEW, Duration.ofHours(1), LocalDateTime.now().plusHours(10));
         List<Task> allSubtasks = inMemoryTaskManager.getAllSubtasks();
         assertEquals(2, allSubtasks.size());
     }
 
     @Test
     void shouldReturnNewStatusWhenAllSubtasksAreNew() {
-        Epic epicGetSubtask = inMemoryTaskManager.getEpicById(3);
+        Epic epicGetSubtask = inMemoryTaskManager.getEpicById(5);
         assertEquals(Status.NEW, epicGetSubtask.getStatus(), "Статус у эпика должен быть NEW");
     }
 
@@ -92,7 +92,7 @@ public class InMemoryTaskManagerTest {
         subtasks1.add(new Subtask("Подзадача 3", "Описание для подзадачи 3", 15, Status.DONE, Duration.ofHours(1), LocalDateTime.now().plusHours(14)));
         subtasks1.add(new Subtask("Подзадача 4", "Описание для подзадачи 4", 16, Status.DONE, Duration.ofHours(1), LocalDateTime.now().plusHours(16)));
         inMemoryTaskManager.createEpic("Эпик, где результат Done", "Описание для еще одного эпика", Status.NEW, subtasks1, Duration.ZERO, null);
-        Epic epicGetSubtask = inMemoryTaskManager.getEpicById(4);
+        Epic epicGetSubtask = inMemoryTaskManager.getEpicById(6);
         assertEquals(Status.DONE, epicGetSubtask.getStatus(), "Статус у эпика должен быть DONE");
     }
 
@@ -102,7 +102,7 @@ public class InMemoryTaskManagerTest {
         subtasks1.add(new Subtask("Подзадача 5", "Описание для подзадачи 5", 15, Status.NEW, Duration.ofHours(1), LocalDateTime.now().plusHours(14)));
         subtasks1.add(new Subtask("Подзадача 6", "Описание для подзадачи 6", 16, Status.DONE, Duration.ofHours(1), LocalDateTime.now().plusHours(16)));
         inMemoryTaskManager.createEpic("Эпик, где результат New", "Описание для еще одного эпика", Status.NEW, subtasks1, Duration.ZERO, null);
-        Epic epicGetSubtask = inMemoryTaskManager.getEpicById(4);
+        Epic epicGetSubtask = inMemoryTaskManager.getEpicById(6);
         assertEquals(Status.IN_PROGRESS, epicGetSubtask.getStatus(), "Статус у эпика должен быть IN_PROGRESS");
     }
 
@@ -112,7 +112,7 @@ public class InMemoryTaskManagerTest {
         subtasks1.add(new Subtask("Подзадача 5", "Описание для подзадачи 5", 15, Status.IN_PROGRESS, Duration.ofHours(1), LocalDateTime.now().plusHours(14)));
         subtasks1.add(new Subtask("Подзадача 6", "Описание для подзадачи 6", 16, Status.IN_PROGRESS, Duration.ofHours(1), LocalDateTime.now().plusHours(16)));
         inMemoryTaskManager.createEpic("Эпик, где результат New", "Описание для еще одного эпика", Status.NEW, subtasks1, Duration.ZERO, null);
-        Epic epicGetSubtask = inMemoryTaskManager.getEpicById(4);
+        Epic epicGetSubtask = inMemoryTaskManager.getEpicById(6);
         assertEquals(Status.IN_PROGRESS, epicGetSubtask.getStatus(), "Статус у эпика должен быть IN_PROGRESS");
     }
 
@@ -126,7 +126,7 @@ public class InMemoryTaskManagerTest {
 
     @Test
     void checkCorrectInformationAboutSubtask() {
-        Subtask subtask = inMemoryTaskManager.getSubtaskById(2);
+        Subtask subtask = inMemoryTaskManager.getSubtaskById(3);
         assertEquals("Заказать еду", subtask.getTaskName());
         assertEquals("Perekrestok", subtask.getDescription());
         assertEquals(Status.IN_PROGRESS, subtask.getStatus());
@@ -134,7 +134,7 @@ public class InMemoryTaskManagerTest {
 
     @Test
     void checkCorrectInformationAboutEpic() {
-        Epic epic = inMemoryTaskManager.getEpicById(3);
+        Epic epic = inMemoryTaskManager.getEpicById(5);
         assertEquals("Эпик", epic.getTaskName());
         assertEquals("Описание для эпика", epic.getDescription());
         assertEquals(Status.NEW, epic.getStatus());
@@ -148,20 +148,22 @@ public class InMemoryTaskManagerTest {
 
     @Test
     void checkCorrectDeleteSubtask() {
-        inMemoryTaskManager.deleteSubtaskById(2);
+        inMemoryTaskManager.deleteSubtaskById(3);
         assertNull(inMemoryTaskManager.getSubtaskById(2));
     }
 
     @Test
     void checkCorrectDeleteEpic() {
-        inMemoryTaskManager.deleteEpicById(3);
+        inMemoryTaskManager.deleteEpicById(5);
         assertNull(inMemoryTaskManager.getEpicById(3));
     }
 
     @Test
     void checkCorrectUpdateTask() {
-        Task newTask = inMemoryTaskManager.createTask("Почитать", "Книгу", Status.IN_PROGRESS, 1, Duration.ofHours(1), LocalDateTime.now());
-        inMemoryTaskManager.updateTask(newTask);
+        Task newTask = inMemoryTaskManager.createTask("Почитать", "Книгу", Status.IN_PROGRESS, Duration.ofHours(1), LocalDateTime.now());
+        Task oldTask = inMemoryTaskManager.getTaskById(1);
+        int oldTaskId = oldTask.getTaskId();
+        inMemoryTaskManager.updateTask(newTask, oldTaskId);
         Task task = inMemoryTaskManager.getTaskById(1);
         assertEquals("Почитать", task.getTaskName());
         assertEquals("Книгу", task.getDescription());
@@ -170,22 +172,26 @@ public class InMemoryTaskManagerTest {
 
     @Test
     void checkCorrectUpdateSubtask() {
-        Subtask newSubtask = inMemoryTaskManager.createSubtask("Заказать еду на ужин", "Perekrestok or Samokat", Status.NEW, 2, Duration.ofHours(1), LocalDateTime.now().plusHours(2));
-        inMemoryTaskManager.updateSubtask(newSubtask);
-        Subtask subtask = inMemoryTaskManager.getSubtaskById(2);
-        assertEquals("Заказать еду на ужин", subtask.getTaskName());
-        assertEquals("Perekrestok or Samokat", subtask.getDescription());
-        assertEquals(Status.NEW, subtask.getStatus());
+        Subtask newSubtask = inMemoryTaskManager.createSubtask("Заказать еду на ужин", "Perekrestok or Samokat", Status.NEW, Duration.ofHours(1), LocalDateTime.now().plusHours(2));
+        Subtask oldSubtask = inMemoryTaskManager.getSubtaskById(3);
+        int oldSubtaskId = oldSubtask.getTaskId();
+        inMemoryTaskManager.updateSubtask(newSubtask, oldSubtaskId);
+        Subtask updatedSubtask = inMemoryTaskManager.getSubtaskById(oldSubtaskId);
+        assertEquals("Заказать еду на ужин", updatedSubtask.getTaskName());
+        assertEquals("Perekrestok or Samokat", updatedSubtask.getDescription());
+        assertEquals(Status.NEW, updatedSubtask.getStatus());
     }
 
     @Test
     void checkCorrectUpdateEpic() {
-        Epic newEpic = inMemoryTaskManager.createEpic("План на вторник", "Успеть до вечера", 3, Status.IN_PROGRESS, Duration.ZERO, null);
-        inMemoryTaskManager.updateEpic(newEpic);
-        Epic epic = inMemoryTaskManager.getEpicById(3);
-        assertEquals("План на вторник", epic.getTaskName());
-        assertEquals("Успеть до вечера", epic.getDescription());
-        assertEquals(Status.IN_PROGRESS, epic.getStatus());
+        Epic newEpic = inMemoryTaskManager.createEpic("План на вторник", "Успеть до вечера", Status.IN_PROGRESS);
+        Epic oldEpic = inMemoryTaskManager.getEpicById(5);
+        int oldEpicId = oldEpic.getTaskId();
+        inMemoryTaskManager.updateEpic(newEpic, oldEpicId);
+        Epic updatedEpic = inMemoryTaskManager.getEpicById(oldEpicId);
+        assertEquals("План на вторник", updatedEpic.getTaskName());
+        assertEquals("Успеть до вечера", updatedEpic.getDescription());
+        assertEquals(Status.IN_PROGRESS, updatedEpic.getStatus());
     }
 
 }

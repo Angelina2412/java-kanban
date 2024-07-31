@@ -42,7 +42,7 @@ public class FileBackedTaskManagerTest {
     void testSaveAndLoadMultipleTasks() {
         Task task1 = new Task("Task 1", "Обед", 1, Status.NEW, Duration.ofHours(1), LocalDateTime.now().plusHours(2));
         Task task2 = new Task("Task 2", "Ужин", 2, Status.IN_PROGRESS, Duration.ofHours(1), LocalDateTime.now().plusHours(4));
-        Epic epic1 = new Epic("Epic 1", "Завтрак", 3, Status.NEW, Duration.ofHours(1), LocalDateTime.now().plusHours(6));
+        Epic epic1 = new Epic("Epic 1", "Завтрак", 3, Status.NEW);
         Subtask subtask1 = new Subtask("Subtask 1", "Перекус", 4, Status.DONE, Duration.ofHours(1), LocalDateTime.now().plusHours(8));
 
         manager.addTask(task1);

@@ -1,11 +1,8 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
-
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm, dd.MM.yy ");
     protected String taskName;
     protected String description;
     protected Status status;
@@ -13,6 +10,12 @@ public class Task {
     protected Duration duration;
     protected LocalDateTime startTime;
 
+    public Task(String taskName, String description, int taskId, Status status) {
+        this.taskName = taskName;
+        this.description = description;
+        this.taskId = taskId;
+        this.status = status;
+    }
 
     public Task(String taskName, String description, int taskId, Status status, Duration duration, LocalDateTime startTime) {
         this.taskName = taskName;

@@ -19,7 +19,7 @@ public class InMemoryHistoryManagerTest {
         Subtask subtask2 = inMemoryTaskManager.createSubtask("Заказать еду", "Perekrestok",
                 Status.IN_PROGRESS, Duration.ofHours(1), LocalDateTime.now().plusHours(2));
         Epic epic3 = inMemoryTaskManager.createEpic("План на понедельник", "Успеть до обеда",
-                Status.NEW, Duration.ofHours(1), LocalDateTime.now().plusHours(4));
+                Status.NEW);
         Task task4 = inMemoryTaskManager.createTask("Обед", "Дома", Status.NEW,
                 Duration.ofHours(1), LocalDateTime.now().plusHours(6));
         Task task5 = inMemoryTaskManager.createTask("Ужин", "Кафе", Status.NEW,

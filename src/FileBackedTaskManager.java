@@ -49,6 +49,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } else {
             type = TaskType.TASK;
         }
+
         String epicId = "";
         if (task.getClass() == Subtask.class) {
             Subtask subtask = (Subtask) task;
@@ -59,21 +60,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
         }
 
-        String formattedDate;
-        if (task.getStartTime() != null) {
-            formattedDate = task.getStartTime().format(DATE_TIME_FORMATTER);
-        } else {
-            formattedDate = "null";
-        }
-        return String.format("%d,%s,%s,%s,%s,%d,%s",
+        String formattedDate = task.getStartTime() != null ? task.getStartTime().format(DATE_TIME_FORMATTER) : "null";
+        long durationMinutes = task.getDuration() != null ? task.getDuration().toMinutes() : 0;
+
+        return String.format("%d,%s,%s,%s,%s,%d,%s,%s",
                 task.getTaskId(),
-                task.getType(),
+                type,
                 task.getTaskName(),
                 task.getStatus(),
                 task.getDescription(),
-                task.getDuration().toMinutes(),
-                formattedDate);
-
+                durationMinutes,
+                formattedDate,
+                epicId);
     }
 
     private static Task fromString(String value) {
@@ -150,24 +148,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addTask(Task task, int taskId) {
-        super.addTask(task, taskId);
-        save();
-    }
-
-    @Override
-    public void addSubtask(Subtask subtask, int taskId) {
-        super.addSubtask(subtask, taskId);
-        save();
-    }
-
-    @Override
-    public void addEpic(Epic epic, int taskId) {
-        super.addEpic(epic, taskId);
-        save();
-    }
-
-    @Override
     public Task createTask(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
         Task newTask = super.createTask(name, description, status, duration, startTime);
         save();
@@ -182,36 +162,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Task createTask(String name, String description, Status status, int taskId, Duration duration, LocalDateTime startTime) {
-        Task newTask = super.createTask(name, description, status, taskId, duration, startTime);
-        save();
-        return newTask;
-    }
-
-    @Override
-    public Subtask createSubtask(String name, String description, Status status, int taskId, Duration duration, LocalDateTime startTime) {
-        Subtask newSubtask = super.createSubtask(name, description, status, taskId, duration, startTime);
-        save();
-        return newSubtask;
-    }
-
-    @Override
-    public Epic createEpic(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
-        Epic newEpic = super.createEpic(name, description, status, duration, startTime);
-        save();
-        return newEpic;
-    }
-
-    @Override
-    public Epic createEpic(String name, String description, int taskId, Status status, Duration duration, LocalDateTime startTime) {
-        Epic newEpic = super.createEpic(name, description, taskId, status, duration, startTime);
-        save();
-        return newEpic;
-    }
-
-    @Override
-    public Epic createEpic(String name, String description, int taskId, Status status, List<Subtask> subtasks, Duration duration, LocalDateTime startTime) {
-        Epic newEpic = super.createEpic(name, description, taskId, status, subtasks, duration, startTime);
+    public Epic createEpic(String name, String description, Status status) {
+        Epic newEpic = super.createEpic(name, description, status);
         save();
         return newEpic;
     }
@@ -236,20 +188,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task task) {
-        super.updateTask(task);
+    public void updateTask(Task task, int taskId) {
+        super.updateTask(task, taskId);
         save();
     }
 
     @Override
-    public void updateEpic(Epic epic) {
-        super.updateEpic(epic);
+    public void updateEpic(Epic epic, int taskId) {
+        super.updateEpic(epic, taskId);
         save();
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
-        super.updateSubtask(subtask);
+    public void updateSubtask(Subtask subtask, int taskId) {
+        super.updateSubtask(subtask, taskId);
         save();
     }
 
