@@ -1,8 +1,11 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
     private Epic epic;
 
-    public Subtask(String taskName, String description, int taskId, Status status) {
-        super(taskName, description, taskId, status);
+    public Subtask(String taskName, String description, int taskId, Status status, Duration duration, LocalDateTime startTime) {
+        super(taskName, description, taskId, status, duration, startTime);
         this.epic = epic;
     }
 
