@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TaskManager {
+
     void addTask(Task task);
 
     void addSubtask(Subtask subtask);
@@ -63,5 +64,9 @@ public interface TaskManager {
 
     List<Task> getPrioritizedTasks();
 
+    boolean isOverlapping(Task task);
+
     void clear();
+
+    void clearPrioritizedTasks();
 }
