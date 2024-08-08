@@ -1,16 +1,18 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class TaskHandler extends BaseHttpHandler implements HttpHandler {
+public class TaskHandler extends BaseHttpHandler {
 
+    private static final Logger logger = Logger.getLogger(TaskHandler.class.getName());
     private TaskManager taskManager = Managers.getDefaultTaskManager();
     private final Gson gson;
 
@@ -48,6 +50,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                     sendNotFound(exchange);
             }
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Такого метода не существует", e);
             sendInternalError(exchange, e);
         }
     }
